@@ -77,6 +77,14 @@ public:
 				m_program_counter = jump_address;
 			}
 			break;
+		case 0x2000: // 2NNN - Call subroutine
+			{
+				const uint16_t subroutine_address = instruction & 0x0FFF;
+
+				m_memory[m_stack_pointer++] = m_program_counter + 2;
+				m_program_counter = subroutine_address;
+			}
+			break;
 		}
 
 		if (m_delay_timer > 0)
