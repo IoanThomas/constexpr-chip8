@@ -64,10 +64,17 @@ public:
 				break;
 			case 0xEE: // 00EE - Return from subroutine
 				if (m_stack_pointer <= call_stack_start)
-					continue_running = false;
+					continue_running = false; // Quit program if we are in the starting subroutine
 
 				m_program_counter = m_memory[--m_stack_pointer];
 				break;
+			}
+			break;
+		case 0x1000: // 1NNN - Jump to address
+			{
+				const uint16_t jump_address = instruction & 0x0FFF;
+
+				m_program_counter = jump_address;
 			}
 			break;
 		}
