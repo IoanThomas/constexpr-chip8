@@ -1,0 +1,22 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Configure CMake
+      run: mkdir build && cd build && cmake ..
+    - name: Build project
+      run: cmake --build build
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure CMake
+        run: mkdir build && cd build && cmake ..
+      - name: Build project
+        run: cmake --build build
