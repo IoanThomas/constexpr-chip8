@@ -200,6 +200,14 @@ public:
 				m_program_counter += 2;
 			}
 			break;
+		case 0xA000: // ANNN - Set the address register to NNN
+			{
+				const uint8_t value = instruction & 0x0FFF;
+
+				m_memory[address_register] = value;
+
+				m_program_counter += 2;
+			}
 		}
 
 		if (m_delay_timer > 0)
