@@ -70,14 +70,14 @@ public:
 				break;
 			}
 			break;
-		case 0x1000: // 1NNN - Jump to address
+		case 0x1000: // 1NNN - Jump to address NNN
 			{
 				const uint16_t jump_address = instruction & 0x0FFF;
 
 				m_program_counter = jump_address;
 			}
 			break;
-		case 0x2000: // 2NNN - Call subroutine
+		case 0x2000: // 2NNN - Call subroutine at NNN
 			{
 				const uint16_t subroutine_address = instruction & 0x0FFF;
 
@@ -208,6 +208,14 @@ public:
 
 				m_program_counter += 2;
 			}
+			break;
+		case 0xB000: // BNNN - Jump to address NNN + V0
+			{
+				const uint16_t jump_address = (instruction & 0x0FFF) + m_registers[0x0];
+
+				m_program_counter = jump_address;
+			}
+			break;
 		}
 
 		if (m_delay_timer > 0)
