@@ -109,10 +109,10 @@ public:
 			break;
 		case 0x5000: // 5XY0 - Skip next instruction if Vx = Vy
 			{
-				const uint8_t register1 = (instruction & 0x0F00) >> 8;
-				const uint8_t register2 = (instruction & 0x00F0) >> 4;
+				const uint8_t register_x = (instruction & 0x0F00) >> 8;
+				const uint8_t register_y = (instruction & 0x00F0) >> 4;
 
-				if (m_registers[register1] == m_registers[register2])
+				if (m_registers[register_x] == m_registers[register_y])
 					m_program_counter += 2;
 
 				m_program_counter += 2;
@@ -138,6 +138,57 @@ public:
 				m_program_counter += 2;
 			}
 			break;
+		case 0x8000:
+		{
+			const uint8_t register_x = (instruction & 0x0F00) >> 8;
+			const uint8_t register_y = (instruction & 0x00F0) >> 4;
+
+			switch (instruction & 0x000F)
+			{
+			case 0x0000: // 8XY0 - Set Vx to Vy
+				m_registers[register_x] = m_registers[register_y];
+				m_program_counter += 2;
+				break;
+			case 0x0001: // 8XY1 - Set Vx to Vx OR Vy
+				m_registers[register_x] |= m_registers[register_y];
+				m_program_counter += 2;
+				break;
+			case 0x0002: // 8XY2 - Set Vx to Vx AND Vy
+				m_registers[register_x] &= m_registers[register_y];
+				m_program_counter += 2;
+				break;
+			case 0x0003: // 8XY3 - Set Vx to Vx XOR Vy
+				m_registers[register_x] ^= m_registers[register_y];
+				m_program_counter += 2;
+				break;
+			case 0x0004: // 8XY4 - Add Vy to Vx, set Vf to 1 if there is a carry, and 0 otherwise
+				m_registers[register_x] += m_registers[register_y];
+				m_registers[0xF] = (m_registers[register_y] > (0xFF - m_registers[register_x])) ? 1 : 0;
+				m_program_counter += 2;
+				break;
+			case 0x0005: // 8XY5 - Subtract Vy from Vx, set Vf to 0 if there is a borrow, and 1 otherwise
+				m_registers[0xF] = (m_registers[register_y] > m_registers[register_x]) ? 0 : 1;
+				m_registers[register_x] -= m_registers[register_y];
+				m_program_counter += 2;
+				break;
+			case 0x0006: // 8XY6 - Store the least significant bit of Vx in Yf, and right shift Vx by 1
+				m_registers[0xF] = m_registers[register_x] & 1;
+				m_registers[register_x] >>= 1;
+				m_program_counter += 2;
+				break;
+			case 0x0007: // 8XY7 - Set Vx to Vy - Vx, set Vf to 0 if there is a borrow, and 1 otherwise
+				m_registers[0xF] = (m_registers[register_x] > m_registers[register_y]) ? 0 : 1;
+				m_registers[register_x] = m_registers[register_y] - m_registers[register_x];
+				m_program_counter += 2;
+				break;
+			case 0x000E:
+				m_registers[0xF] = m_registers[register_x] >> 7;
+				m_registers[register_x] <<= 1;
+				m_program_counter += 2;
+				break;
+			}
+		}
+		break;
 		}
 
 		if (m_delay_timer > 0)
