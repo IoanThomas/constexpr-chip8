@@ -2,7 +2,7 @@
 
 int main()
 {
-	std::coutt << "This should not pass CI!\n";
+	std::cout << "Hello World!\n";
 	
 	return 0;
 }
