@@ -54,7 +54,22 @@ public:
 
 		switch (opcode_major)
 		{
+		case 0x0000:
+			switch (instruction & 0x00FF)
+			{
+			case 0xE0: // 00E0 - Clear screen
+				clear_screen();
+				m_draw_flag = true;
 
+				break;
+			case 0xEE: // 00EE - Return from subroutine
+				if (m_stack_pointer <= call_stack_start)
+					continue_running = false;
+
+				m_program_counter = m_memory[--m_stack_pointer];
+				break;
+			}
+			break;
 		}
 
 		if (m_delay_timer > 0)
@@ -66,12 +81,19 @@ public:
 		return continue_running;
 	}
 
+	constexpr void clear_screen() noexcept
+	{
+		for (auto i = 0; i < display_memory_size; ++i)
+			m_memory[display_memory_start + i] = 0;
+	}
+
 private:
 	std::array<uint8_t, memory_size> m_memory{};
 	std::array<uint8_t, 16> m_registers{};
 
 	uint16_t m_program_counter = program_memory_start;
 	uint16_t m_stack_pointer = call_stack_start;
+	bool m_draw_flag = false;
 
 	uint8_t m_delay_timer = 60;
 	uint8_t m_sound_timer = 60;
