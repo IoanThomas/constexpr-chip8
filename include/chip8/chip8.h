@@ -32,7 +32,7 @@ public:
 		assert(size <= program_memory_end - program_memory_start);
 
 		for (auto i = 0; i < size; ++i)
-			m_memory[static_cast<decltype(m_memory)::size_type>(program_memory_start) + i] = program[i];
+			m_memory[static_cast<typename decltype(m_memory)::size_type>(program_memory_start) + i] = program[i];
 	}
 
 private:
