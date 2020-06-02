@@ -118,6 +118,14 @@ public:
 				m_program_counter += 2;
 			}
 			break;
+		case 0x6000: // 6XNN - Set Vx to NN
+			{
+				const uint8_t registr = (instruction & 0x0F00) >> 8;
+				m_registers[registr] = instruction & 0x00FF;
+
+				m_program_counter += 2;
+			}
+			break;
 		}
 
 		if (m_delay_timer > 0)
