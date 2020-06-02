@@ -96,6 +96,17 @@ public:
 				m_program_counter += 2;
 			}
 			break;
+		case 0x4000: // 4XNN - Skip next instruction if Vx =/= NN
+			{
+				const uint8_t registr = (instruction & 0x0F00) >> 8;
+				const uint8_t value = instruction & 0x00FF;
+
+				if (m_registers[registr] != value)
+					m_program_counter += 2;
+
+				m_program_counter += 2;
+			}
+			break;
 		}
 
 		if (m_delay_timer > 0)
