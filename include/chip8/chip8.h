@@ -216,6 +216,17 @@ public:
 				m_program_counter = jump_address;
 			}
 			break;
+		case 0xC000:
+			{
+				const uint8_t registr = (instruction & 0x0F00) >> 8;
+				const uint8_t value = instruction & 0x00FF;
+
+				// TODO: Generate random numbers at both compile-time and runtime
+				//m_registers[registr] = random_number() & value;
+
+				m_program_counter += 2;
+			}
+			break;
 		}
 
 		if (m_delay_timer > 0)
