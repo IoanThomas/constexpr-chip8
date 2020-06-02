@@ -121,7 +121,19 @@ public:
 		case 0x6000: // 6XNN - Set Vx to NN
 			{
 				const uint8_t registr = (instruction & 0x0F00) >> 8;
-				m_registers[registr] = instruction & 0x00FF;
+				const uint8_t value = instruction & 0x00FF;
+
+				m_registers[registr] = value;
+
+				m_program_counter += 2;
+			}
+			break;
+		case 0x7000: // 7XNN - Add NN to Vx
+			{
+				const uint8_t registr = (instruction & 0x0F00) >> 8;
+				const uint8_t value = instruction & 0x00FF;
+
+				m_registers[registr] += value;
 
 				m_program_counter += 2;
 			}
