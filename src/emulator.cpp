@@ -1,12 +1,9 @@
-#include <iostream>
-
 #include "chip8/chip8.h"
 
 int main()
 {
-	chip8 emu;
+	constexpr std::array<uint8_t, 2> program = { 0x63, 0x55 };
+	constexpr chip8 emu(program);
 
-	std::cout << emu.display_memory_size << '\n';
-	
 	return 0;
 }

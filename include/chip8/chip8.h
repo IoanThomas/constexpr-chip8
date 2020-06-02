@@ -1,3 +1,6 @@
+#include <array>
+#include <cassert>
+#include <cstddef>
 #include <cstdint>
 
 template<uint16_t memory_size = 4096>
@@ -22,4 +25,23 @@ public:
 	static constexpr uint16_t program_memory_end = call_stack_start;
 
 	static_assert(program_memory_end - program_memory_start > 0, "No memory for programs");
+
+	template<std::size_t size>
+	constexpr chip8(const std::array<uint8_t, size>& program) noexcept
+	{
+		assert(size <= program_memory_end - program_memory_start);
+
+		for (auto i = 0; i < size; ++i)
+			m_memory[static_cast<decltype(m_memory)::size_type>(program_memory_start) + i] = program[i];
+	}
+
+private:
+	std::array<uint8_t, memory_size> m_memory{};
+	std::array<uint8_t, 16> m_registers{};
+
+	uint16_t m_program_counter = program_memory_start;
+	uint16_t m_stack_pointer = call_stack_start;
+
+	uint8_t m_delay_timer = 60;
+	uint8_t m_sound_timer = 60;
 };
