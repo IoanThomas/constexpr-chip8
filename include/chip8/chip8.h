@@ -107,6 +107,17 @@ public:
 				m_program_counter += 2;
 			}
 			break;
+		case 0x5000: // 5XY0 - Skip next instruction if Vx = Vy
+			{
+				const uint8_t register1 = (instruction & 0x0F00) >> 8;
+				const uint8_t register2 = (instruction & 0x00F0) >> 4;
+
+				if (m_registers[register1] == m_registers[register2])
+					m_program_counter += 2;
+
+				m_program_counter += 2;
+			}
+			break;
 		}
 
 		if (m_delay_timer > 0)
