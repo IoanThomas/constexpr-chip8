@@ -31,8 +31,39 @@ public:
 	{
 		assert(size <= program_memory_end - program_memory_start);
 
+		// Copy the program into memory
 		for (auto i = 0; i < size; ++i)
 			m_memory[static_cast<typename decltype(m_memory)::size_type>(program_memory_start) + i] = program[i];
+	}
+
+	constexpr void run() noexcept
+	{
+		while (next_instruction()) {}
+	}
+
+	constexpr bool next_instruction() noexcept
+	{
+		// Memory is stored as single bytes, but instructions are two bytes each, so we combine OR them together
+		const uint16_t instruction = (m_memory[m_program_counter] << 8) | m_memory[m_program_counter + 1];
+	}
+
+	constexpr bool evaluate_instruction(const uint16_t instruction) noexcept
+	{
+		bool continue_running = true;
+		const uint16_t opcode_major = instruction & 0xF000;
+
+		switch (opcode_major)
+		{
+
+		}
+
+		if (m_delay_timer > 0)
+			--m_delay_timer;
+
+		if (m_sound_timer > 0)
+			--m_sound_timer;
+
+		return continue_running;
 	}
 
 private:
