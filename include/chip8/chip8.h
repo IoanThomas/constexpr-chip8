@@ -216,13 +216,24 @@ public:
 				m_program_counter = jump_address;
 			}
 			break;
-		case 0xC000:
+		case 0xC000: // CXNN - Set Vx to a random number AND NN
 			{
 				const uint8_t registr = (instruction & 0x0F00) >> 8;
 				const uint8_t value = instruction & 0x00FF;
 
 				// TODO: Generate random numbers at both compile-time and runtime
 				//m_registers[registr] = random_number() & value;
+
+				m_program_counter += 2;
+			}
+			break;
+		case 0xD000: // DXYN - Draw sprite located at address register at (Vx,Vy), with a height of N
+			{
+				const uint8_t register_x = (instruction & 0x0F00) >> 8;
+				const uint8_t register_y = (instruction & 0x00F0) >> 4;
+				const uint8_t height = instruction & 0x000F;
+
+				draw_sprite(m_registers[register_x], m_registers[register_y], height);
 
 				m_program_counter += 2;
 			}
@@ -236,6 +247,41 @@ public:
 			--m_sound_timer;
 
 		return continue_running;
+	}
+
+	constexpr void draw_sprite(const uint8_t x_pos, const uint8_t y_pos, const uint8_t height) noexcept
+	{
+		bool pixels_inverted = false;
+
+		for (auto y = 0; y < height; ++y)
+		{
+			const auto row = m_memory[m_memory[address_register] + y];
+
+			for (auto x = 0; x < 8; ++x)
+			{
+				const bool bit = (row >> (7 - (x % 8))) & 1;
+
+				if (bit)
+				{
+					if (is_pixel_set(x_pos + x, y_pos + y))
+						pixels_inverted = true;
+
+					invert_pixel(x_pos + x, y_pos + y);
+				}
+			}
+		}
+	}
+
+	constexpr bool is_pixel_set(const uint8_t x_pos, const uint8_t y_pos) const noexcept
+	{
+		const auto byte = m_memory[display_memory_start + (y_pos * display_width / 8) + (x_pos / 8)];
+		return (byte >> (7 - (x_pos % 8))) & 1;
+	}
+
+	constexpr void invert_pixel(const uint8_t x_pos, const uint8_t y_pos) noexcept
+	{
+		auto& byte = m_memory[display_memory_start + (y_pos * display_width / 8) + (x_pos / 8)];
+		byte ^= (1 << (7 - (x_pos % 8)));
 	}
 
 	constexpr void clear_screen() noexcept
