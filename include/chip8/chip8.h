@@ -281,7 +281,7 @@ public:
 					m_program_counter += 2;
 					break;
 				case 0x001E: // FX1E - Add Vx to address register, set Vf to 1 if there is an overflow, and 0 otherwise
-					m_registers[0xF] = (m_registers[registr] + m_memory[address_register] > 0xFFF) ? 1 : 0
+					m_registers[0xF] = (m_registers[registr] + m_memory[address_register] > 0xFFF) ? 1 : 0;
 					m_memory[address_register] += m_registers[registr];
 					m_program_counter += 2;
 					break;
