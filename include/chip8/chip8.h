@@ -238,6 +238,25 @@ public:
 				m_program_counter += 2;
 			}
 			break;
+		case 0xE000:
+			{
+				const uint8_t registr = (instruction & 0x0F00) >> 8;
+
+				switch (instruction & 0x00FF)
+				{
+				case 0x9E: // EX9E - Skip next instruction if key stored in Vx is pressed
+					// TODO: Keyboard input
+
+					m_program_counter += 2;
+					break;
+				case 0xA1: // EXA1 - Skip next instruction if key stored in Vx is not pressed
+					// TODO: Keyboard input
+
+					m_program_counter += 2;
+					break;
+				}
+			}
+			break;
 		}
 
 		if (m_delay_timer > 0)
