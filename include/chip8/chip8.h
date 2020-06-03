@@ -244,13 +244,66 @@ public:
 
 				switch (instruction & 0x00FF)
 				{
-				case 0x9E: // EX9E - Skip next instruction if key stored in Vx is pressed
+				case 0x009E: // EX9E - Skip next instruction if key stored in Vx is pressed
 					// TODO: Keyboard input
 
 					m_program_counter += 2;
 					break;
-				case 0xA1: // EXA1 - Skip next instruction if key stored in Vx is not pressed
+				case 0x00A1: // EXA1 - Skip next instruction if key stored in Vx is not pressed
 					// TODO: Keyboard input
+
+					m_program_counter += 2;
+					break;
+				}
+			}
+			break;
+		case 0xF000:
+			{
+				const uint8_t registr = (instruction & 0x0F00) >> 8;
+
+				switch (instruction & 0x00FF)
+				{
+				case 0x0007: // FX07 - Set Vx to the value of the delay timer
+					m_registers[registr] = m_delay_timer;
+					m_program_counter += 2;
+					break;
+				case 0x000A: // FX0A - Wait for a key press and store it in Vx
+					// TODO: Keyboard input
+
+					m_program_counter += 2;
+					break;
+				case 0x0015: // FX15 - Set the delay timer to Vx
+					m_delay_timer = m_registers[registr];
+					m_program_counter += 2;
+					break;
+				case 0x0018: // FX18 - Set the sound timer to Vx
+					m_sound_timer = m_registers[registr];
+					m_program_counter += 2;
+					break;
+				case 0x001E: // FX1E - Add Vx to address register, set Vf to 1 if there is an overflow, and 0 otherwise
+					m_registers[0xF] = (m_registers[registr] + m_memory[address_register] > 0xFFF) ? 1 : 0
+					m_memory[address_register] += m_registers[registr];
+					m_program_counter += 2;
+					break;
+				case 0x0029: // FX29 - Set address register to location of sprite for character in Vx
+					m_memory[address_register] = m_registers[registr] * 5;
+					m_program_counter += 2;
+					break;
+				case 0x0033: // FX33 - Store binary-coded decimal representation of Vx in address register and next two locations
+					m_memory[address_register] = m_registers[registr] / 100;
+					m_memory[address_register + 1] = (m_registers[registr] / 10) % 10;
+					m_memory[address_register + 2] = m_registers[registr] % 10;
+					m_program_counter += 2;
+					break;
+				case 0x0055: // FX55 - Store V0 to Vx in memory starting at address register
+					for (auto i = 0; i < registr; ++i)
+						m_memory[address_register + i] = m_registers[i];
+
+					m_program_counter += 2;
+					break;
+				case 0x0065: // FX65 - Fill V0 to Vx with values starting at address register
+					for (auto i = 0; i < registr; ++i)
+						m_registers[i] = m_memory[address_register + i];
 
 					m_program_counter += 2;
 					break;
