@@ -10,7 +10,9 @@ jobs:
     - name: Configure CMake
       run: mkdir build && cd build && cmake ..
     - name: Build project
-      run: cmake --build build
+      run: cmake --build build --target chip8_emu
+    - name: Run tests
+      run: cmake --build build --target tests
 
   build-windows:
     runs-on: windows-latest
@@ -19,4 +21,6 @@ jobs:
       - name: Configure CMake
         run: mkdir build && cd build && cmake ..
       - name: Build project
-        run: cmake --build build
+        run: cmake --build build --target chip8_emu
+      - name: Run tests
+        run: cmake --build build --target tests
