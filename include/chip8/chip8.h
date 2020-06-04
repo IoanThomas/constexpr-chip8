@@ -82,6 +82,8 @@ public:
 	{
 		// Memory is stored as single bytes, but instructions are two bytes each, so we combine OR them together
 		const uint16_t instruction = (memory[program_counter] << 8) | memory[program_counter + 1];
+
+		return instruction > 0 ? evaluate_instruction(instruction) : false;
 	}
 
 	constexpr bool evaluate_instruction(const uint16_t instruction) noexcept
@@ -94,12 +96,13 @@ public:
 		case 0x0000:
 			switch (instruction & 0x00FF)
 			{
-			case 0xE0: // 00E0 - Clear screen
+			case 0x00E0: // 00E0 - Clear screen
 				clear_screen();
 				draw_flag = true;
 
+				program_counter += 2;
 				break;
-			case 0xEE: // 00EE - Return from subroutine
+			case 0x00EE: // 00EE - Return from subroutine
 				if (stack_pointer <= call_stack_start)
 					continue_running = false; // Quit program if we are in the starting subroutine
 
@@ -379,6 +382,9 @@ public:
 				}
 			}
 		}
+
+		registers.data[0xF] = pixels_inverted ? 1 : 0;
+		draw_flag = true;
 	}
 
 	constexpr bool is_pixel_set(const uint8_t x_pos, const uint8_t y_pos) const noexcept
