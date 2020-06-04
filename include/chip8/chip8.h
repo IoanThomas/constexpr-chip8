@@ -301,7 +301,7 @@ public:
 				switch (instruction & 0x00FF)
 				{
 				case 0x0007: // FX07 - Set Vx to the value of the delay timer
-					registers.data[registr] = m_delay_timer;
+					registers.data[registr] = delay_timer;
 					program_counter += 2;
 					break;
 				case 0x000A: // FX0A - Wait for a key press and store it in Vx
@@ -349,11 +349,11 @@ public:
 			break;
 		}
 
-		if (m_delay_timer > 0)
-			--m_delay_timer;
+		if (delay_timer > 0)
+			--delay_timer;
 
-		if (m_sound_timer > 0)
-			--m_sound_timer;
+		if (sound_timer > 0)
+			--sound_timer;
 
 		return continue_running;
 	}
