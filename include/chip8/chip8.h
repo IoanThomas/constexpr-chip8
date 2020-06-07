@@ -52,7 +52,8 @@ public:
 
 	std::array<uint8_t, memory_size> memory{};
 	uint16_t program_counter = program_memory_start;
-	uint16_t stack_pointer = call_stack_start;
+	std::array<uint16_t, 12> call_stack;
+	uint8_t stack_pointer = 0;
 
 	uint8_t delay_timer = 60;
 	uint8_t sound_timer = 60;
@@ -103,10 +104,14 @@ public:
 				program_counter += 2;
 				break;
 			case 0x00EE: // 00EE - Return from subroutine
-				if (stack_pointer <= call_stack_start)
-					continue_running = false; // Quit program if we are in the starting subroutine
+				if (stack_pointer == 0)
+				{
+					// Quit program if we are in the starting subroutine
+					continue_running = false;
+					break;
+				}
 
-				program_counter = memory[--stack_pointer];
+				program_counter = call_stack[--stack_pointer];
 				break;
 			}
 			break;
@@ -121,7 +126,8 @@ public:
 			{
 				const uint16_t subroutine_address = instruction & 0x0FFF;
 
-				memory[stack_pointer++] = program_counter + 2;
+				auto x = program_counter + 2;
+				call_stack[stack_pointer++] = program_counter + 2;
 				program_counter = subroutine_address;
 			}
 			break;

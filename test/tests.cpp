@@ -32,3 +32,10 @@ TEST_CASE("00E0 resets all pixels", "[opcode]")
 	REQUIRE(TEST(emu.is_pixel_set(0, 31) == false));
 	REQUIRE(TEST(emu.is_pixel_set(63, 31) == false));
 }
+
+TEST_CASE("00EE", "[opcode]")
+{
+	constexpr auto emu = run(0x22, 0x02, 0x00, 0xEE);
+
+	REQUIRE(TEST(emu.program_counter == 514));
+}
