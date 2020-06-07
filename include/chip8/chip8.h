@@ -52,7 +52,7 @@ public:
 
 	std::array<uint8_t, memory_size> memory{};
 	uint16_t program_counter = program_memory_start;
-	std::array<uint16_t, 12> call_stack;
+	std::array<uint16_t, 12> call_stack{};
 	uint8_t stack_pointer = 0;
 
 	uint8_t delay_timer = 60;
