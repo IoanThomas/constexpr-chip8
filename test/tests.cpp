@@ -39,3 +39,10 @@ TEST_CASE("00EE returns from a subroutine", "[opcode]")
 
 	REQUIRE(TEST(emu.program_counter == 514));
 }
+
+TEST_CASE("1NNN jumps to address NNN", "[opcode]")
+{
+	constexpr auto emu = run(0x12, 0x04, 0x00, 0xEE, 0x00, 0xEE);
+
+	REQUIRE(TEST(emu.program_counter == 516));
+}
