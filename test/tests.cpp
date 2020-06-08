@@ -92,3 +92,10 @@ TEST_CASE("7XNN adds NN to Vx", "[opcode]")
 
 	REQUIRE(TEST(emu.registers.data[0x0] == 39));
 }
+
+TEST_CASE("8XY0 sets Vx to Vy", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x12, 0x81, 0x00);
+
+	REQUIRE(TEST(emu.registers.data[0x1] == 18));
+}
