@@ -49,10 +49,17 @@ TEST_CASE("1NNN jumps to address NNN", "[opcode]")
 	REQUIRE(TEST(emu.program_counter == 516));
 }
 
-TEST_CASE("2NNN calls a subroutine at NNN")
+TEST_CASE("2NNN calls a subroutine at NNN", "[opcode]")
 {
 	constexpr auto emu = run(0x22, 0x04, 0x00, 0xEE);
 
 	REQUIRE(TEST(emu.program_counter == 516));
 	REQUIRE(TEST(emu.stack_pointer == 1));
+}
+
+TEST_CASE("3XNN skips the next instruction if Vx equals NN", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x12, 0x30, 0x12, 0x00, 0xEE, 0x00, 0xEE);
+
+	REQUIRE(TEST(emu.program_counter == 518));
 }
