@@ -48,3 +48,11 @@ TEST_CASE("1NNN jumps to address NNN", "[opcode]")
 
 	REQUIRE(TEST(emu.program_counter == 516));
 }
+
+TEST_CASE("2NNN calls a subroutine at NNN")
+{
+	constexpr auto emu = run(0x22, 0x04, 0x00, 0xEE);
+
+	REQUIRE(TEST(emu.program_counter == 516));
+	REQUIRE(TEST(emu.stack_pointer == 1));
+}
