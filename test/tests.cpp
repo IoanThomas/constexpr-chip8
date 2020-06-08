@@ -77,3 +77,11 @@ TEST_CASE("5XY0 skips the next instruction if Vx equals Vy", "[opcode]")
 
 	REQUIRE(TEST(emu.program_counter == 520));
 }
+
+TEST_CASE("6XNN sets Vx to NN", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x12, 0x6F, 0x13);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 18));
+	REQUIRE(TEST(emu.registers.data[0xF] == 19));
+}
