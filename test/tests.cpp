@@ -99,3 +99,24 @@ TEST_CASE("8XY0 sets Vx to Vy", "[opcode]")
 
 	REQUIRE(TEST(emu.registers.data[0x1] == 18));
 }
+
+TEST_CASE("8XY1 sets Vx to Vx OR Vy", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x14, 0x61, 0x0C, 0x80, 0x11);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 28));
+}
+
+TEST_CASE("8XY2 sets Vx to Vx AND Vy", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x14, 0x61, 0x0C, 0x80, 0x12);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 4));
+}
+
+TEST_CASE("8XY3 sets Vx to Vx XOR Vy", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x14, 0x61, 0x0C, 0x80, 0x13);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 24));
+}
