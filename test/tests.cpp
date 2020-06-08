@@ -4,7 +4,8 @@
 
 #include "chip8/chip8.h"
 
-template<bool test> bool static_test()
+template<bool test>
+bool static_test()
 {
 	static_assert(test);
 	return test;
@@ -38,6 +39,7 @@ TEST_CASE("00EE returns from a subroutine", "[opcode]")
 	constexpr auto emu = run(0x22, 0x04, 0x00, 0xEE, 0x00, 0xEE);
 
 	REQUIRE(TEST(emu.program_counter == 514));
+	REQUIRE(TEST(emu.stack_pointer == 0));
 }
 
 TEST_CASE("1NNN jumps to address NNN", "[opcode]")
