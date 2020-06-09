@@ -184,3 +184,10 @@ TEST_CASE("8XYE stores the most significant bit of Vx in Vf, and shifts Vx to th
 	REQUIRE(TEST(emu.registers.data[0x0] == 230));
 	REQUIRE(TEST(emu.registers.data[0xF] == 1));
 }
+
+TEST_CASE("9XY0 skips the next instruction if Vx does not equal Vy", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x12, 0x61, 0x13, 0x50, 0x10, 0x00, 0xEE, 0x00, 0xEE);
+
+	REQUIRE(TEST(emu.program_counter == 518));
+}
