@@ -152,3 +152,11 @@ TEST_CASE("8XY5 subtracts Vy from Vx, settings Vf to 1 when there is not a borro
 	REQUIRE(TEST(emu.registers.data[0x0] == 1));
 	REQUIRE(TEST(emu.registers.data[0xF] == 1));
 }
+
+TEST_CASE("8XY6 stores the least significant bit of Vx in Vf, and shifts Vx to the right by 1", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x79, 0x80, 0x16);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 60));
+	REQUIRE(TEST(emu.registers.data[0xF] == 1));
+}
