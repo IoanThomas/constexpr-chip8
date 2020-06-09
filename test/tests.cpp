@@ -258,3 +258,10 @@ TEST_CASE("FX1E adds Vx to the address register, setting Vf to 0 when there is n
 	REQUIRE(TEST(emu.registers.address == 4010));
 	REQUIRE(TEST(emu.registers.data[0xF] == 0));
 }
+
+TEST_CASE("FX29 sets the address register to the location of the sprite for the character in Vx", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x0F, 0xF0, 0x29);
+
+	REQUIRE(TEST(emu.registers.address == 75));
+}
