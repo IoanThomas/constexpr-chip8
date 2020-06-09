@@ -160,3 +160,19 @@ TEST_CASE("8XY6 stores the least significant bit of Vx in Vf, and shifts Vx to t
 	REQUIRE(TEST(emu.registers.data[0x0] == 60));
 	REQUIRE(TEST(emu.registers.data[0xF] == 1));
 }
+
+TEST_CASE("8XY7 sets Vx to Vy minus Vx, settings Vf to 0 when there is a borrow", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x0F, 0x61, 0x0A, 0x80, 0x17);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 251));
+	REQUIRE(TEST(emu.registers.data[0xF] == 0));
+}
+
+TEST_CASE("8XY7 sets Vx to Vy minus Vx, settings Vf to 1 when there is not a borrow", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x09, 0x61, 0x0A, 0x80, 0x17);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 1));
+	REQUIRE(TEST(emu.registers.data[0xF] == 1));
+}
