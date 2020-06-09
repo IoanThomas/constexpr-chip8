@@ -228,3 +228,17 @@ TEST_CASE("FX07 sets Vx to the delay timer", "[opcode]")
 }
 
 // FX0A cannot be tested as key input is not yet implemented
+
+TEST_CASE("FX15 sets the delay timer to Vx", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x12, 0xF0, 0x15);
+
+	REQUIRE(TEST(emu.delay_timer == 17));
+}
+
+TEST_CASE("FX18 sets the sound timer to Vx", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x12, 0xF0, 0x18);
+
+	REQUIRE(TEST(emu.sound_timer == 17));
+}
