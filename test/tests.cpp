@@ -206,6 +206,8 @@ TEST_CASE("BNNN jumps to address NNN plus V0", "[opcode]")
 	REQUIRE(TEST(emu.program_counter == 518));
 }
 
+// CXNN cannot be tested easily at compile-time
+
 TEST_CASE("DXYN draws a sprite located at the address register at (Vx,Vy), with a height of N", "[opcode]")
 {
 	constexpr auto emu = run(0xD0, 0x05);
@@ -215,3 +217,14 @@ TEST_CASE("DXYN draws a sprite located at the address register at (Vx,Vy), with 
 	REQUIRE(TEST(emu.is_pixel_set(0, 4) == true));
 	REQUIRE(TEST(emu.is_pixel_set(3, 4) == true));
 }
+
+// EX9E and EXA1 cannot be tested as key input is not yet implemented
+
+TEST_CASE("FX07 sets Vx to the delay timer", "[opcode]")
+{
+	constexpr auto emu = run(0xF0, 0x07);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 60));
+}
+
+// FX0A cannot be tested as key input is not yet implemented
