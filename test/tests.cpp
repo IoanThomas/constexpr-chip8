@@ -136,3 +136,19 @@ TEST_CASE("8XY4 adds Vy to Vx, settings Vf to 0 when there is not a carry", "[op
 	REQUIRE(TEST(emu.registers.data[0x0] == 210));
 	REQUIRE(TEST(emu.registers.data[0xF] == 0));
 }
+
+TEST_CASE("8XY5 subtracts Vy from Vx, settings Vf to 0 when there is a borrow", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x0A, 0x61, 0x0F, 0x80, 0x15);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 251));
+	REQUIRE(TEST(emu.registers.data[0xF] == 0));
+}
+
+TEST_CASE("8XY5 subtracts Vy from Vx, settings Vf to 1 when there is not a borrow", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x0A, 0x61, 0x09, 0x80, 0x15);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 1));
+	REQUIRE(TEST(emu.registers.data[0xF] == 1));
+}
