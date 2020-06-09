@@ -198,3 +198,10 @@ TEST_CASE("ANNN sets the address register to NNN", "[opcode]")
 
 	REQUIRE(TEST(emu.registers.address == 18));
 }
+
+TEST_CASE("BNNN jumps to address NNN plus V0", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0x06, 0xB2, 0x00, 0x00, 0xEE, 0x00, 0xEE);
+
+	REQUIRE(TEST(emu.program_counter == 518));
+}
