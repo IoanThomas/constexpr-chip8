@@ -242,3 +242,19 @@ TEST_CASE("FX18 sets the sound timer to Vx", "[opcode]")
 
 	REQUIRE(TEST(emu.sound_timer == 17));
 }
+
+TEST_CASE("FX1E adds Vx to the address register, setting Vf to 1 when there is a range overflow", "[opcode]")
+{
+	constexpr auto emu = run(0xAF, 0xFF, 0x60, 0xFF, 0xF0, 0x1E);
+
+	REQUIRE(TEST(emu.registers.address == 4350));
+	REQUIRE(TEST(emu.registers.data[0xF] == 1));
+}
+
+TEST_CASE("FX1E adds Vx to the address register, setting Vf to 0 when there is not a range overflow", "[opcode]")
+{
+	constexpr auto emu = run(0xAF, 0xA0, 0x60, 0x0A, 0xF0, 0x1E);
+
+	REQUIRE(TEST(emu.registers.address == 4010));
+	REQUIRE(TEST(emu.registers.data[0xF] == 0));
+}

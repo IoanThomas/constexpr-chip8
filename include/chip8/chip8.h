@@ -248,7 +248,7 @@ public:
 			break;
 		case 0xA000: // ANNN - Set the address register to NNN
 			{
-				const uint8_t value = instruction & 0x0FFF;
+				const uint16_t value = instruction & 0x0FFF;
 
 				registers.address = value;
 
