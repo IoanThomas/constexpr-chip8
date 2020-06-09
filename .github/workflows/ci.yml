@@ -8,7 +8,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install SFML dependencies
-      run: sudo apt-get update && sudo apt-get install libgl1-mesa-dev libudev-dev
+      run: sudo apt-get update -y && sudo apt-get install -y libfreetype6-dev libx11-dev libxrandr-dev libgl1-mesa-dev libudev-dev libopenal-dev libflac-dev libogg-dev libvorbis-dev
     - name: Configure CMake
       run: mkdir build && cd build && cmake ..
     - name: Build project
