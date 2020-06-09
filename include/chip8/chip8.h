@@ -208,8 +208,8 @@ public:
 					program_counter += 2;
 					break;
 				case 0x0004: // 8XY4 - Add Vy to Vx, set Vf to 1 if there is a carry, and 0 otherwise
-					registers.data[register_x] += registers.data[register_y];
 					registers.data[0xF] = (registers.data[register_y] > (0xFF - registers.data[register_x])) ? 1 : 0;
+					registers.data[register_x] += registers.data[register_y];
 					program_counter += 2;
 					break;
 				case 0x0005: // 8XY5 - Subtract Vy from Vx, set Vf to 0 if there is a borrow, and 1 otherwise

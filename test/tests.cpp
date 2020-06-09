@@ -120,3 +120,19 @@ TEST_CASE("8XY3 sets Vx to Vx XOR Vy", "[opcode]")
 
 	REQUIRE(TEST(emu.registers.data[0x0] == 24));
 }
+
+TEST_CASE("8XY4 adds Vy to Vx, settings Vf to 1 when there is a carry", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0xC8, 0x61, 0x64, 0x80, 0x14);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 44));
+	REQUIRE(TEST(emu.registers.data[0xF] == 1));
+}
+
+TEST_CASE("8XY4 adds Vy to Vx, settings Vf to 0 when there is not a carry", "[opcode]")
+{
+	constexpr auto emu = run(0x60, 0xC8, 0x61, 0x0A, 0x80, 0x14);
+
+	REQUIRE(TEST(emu.registers.data[0x0] == 210));
+	REQUIRE(TEST(emu.registers.data[0xF] == 0));
+}
