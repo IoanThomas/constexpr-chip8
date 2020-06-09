@@ -265,3 +265,12 @@ TEST_CASE("FX29 sets the address register to the location of the sprite for the 
 
 	REQUIRE(TEST(emu.registers.address == 75));
 }
+
+TEST_CASE("FX33 stores the binary-coded decimal representation of Vx in the address register and next two locations", "[opcode]")
+{
+	constexpr auto emu = run(0xA2, 0x08, 0x60, 0xEB, 0xF0, 0x33);
+
+	REQUIRE(TEST(emu.memory[520] == 2));
+	REQUIRE(TEST(emu.memory[521] == 3));
+	REQUIRE(TEST(emu.memory[522] == 5));
+}
