@@ -205,3 +205,13 @@ TEST_CASE("BNNN jumps to address NNN plus V0", "[opcode]")
 
 	REQUIRE(TEST(emu.program_counter == 518));
 }
+
+TEST_CASE("DXYN draws a sprite located at the address register at (Vx,Vy), with a height of N", "[opcode]")
+{
+	constexpr auto emu = run(0xD0, 0x05);
+
+	REQUIRE(TEST(emu.is_pixel_set(0, 0) == true));
+	REQUIRE(TEST(emu.is_pixel_set(3, 0) == true));
+	REQUIRE(TEST(emu.is_pixel_set(0, 4) == true));
+	REQUIRE(TEST(emu.is_pixel_set(3, 4) == true));
+}
