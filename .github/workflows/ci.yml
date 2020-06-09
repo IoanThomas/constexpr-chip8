@@ -8,7 +8,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set Up OpenGL
-      uses: openrndr/setup-opengl@v1
+      run: sudo apt-get install libgl1-mesa-dev
     - name: Configure CMake
       run: mkdir build && cd build && cmake ..
     - name: Build project
