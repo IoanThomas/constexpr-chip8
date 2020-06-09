@@ -191,3 +191,10 @@ TEST_CASE("9XY0 skips the next instruction if Vx does not equal Vy", "[opcode]")
 
 	REQUIRE(TEST(emu.program_counter == 518));
 }
+
+TEST_CASE("ANNN sets the address register to NNN", "[opcode]")
+{
+	constexpr auto emu = run(0xA0, 0x12);
+
+	REQUIRE(TEST(emu.registers.address == 18));
+}
