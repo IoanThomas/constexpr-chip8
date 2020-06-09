@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set Up OpenGL
-      run: sudo apt-get install libgl1-mesa-dev libudev-dev
+    - name: Install SFML dependencies
+      run: sudo apt-get update && sudo apt-get install libgl1-mesa-dev libudev-dev
     - name: Configure CMake
       run: mkdir build && cd build && cmake ..
     - name: Build project
