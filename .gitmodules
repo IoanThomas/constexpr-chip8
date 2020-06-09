@@ -2,3 +2,7 @@
 	path = extern/catch2
 	url = https://github.com/catchorg/Catch2.git
 	branch = master
+[submodule "extern/SFML"]
+	path = extern/SFML
+	url = https://github.com/SFML/SFML.git
+	branch = master
