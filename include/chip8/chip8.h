@@ -3,7 +3,6 @@
 #include <cstddef>
 #include <cstdint>
 
-template<uint16_t memory_size = 4096>
 class chip8
 {
 public:
@@ -27,6 +26,7 @@ public:
 	};
 
 	// Emulator specifications
+	static constexpr uint16_t memory_size = 4096;
 	static constexpr uint8_t display_width = 64;
 	static constexpr uint8_t display_height = 32;
 	static constexpr uint8_t max_stacks = 12;
