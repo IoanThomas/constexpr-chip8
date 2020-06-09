@@ -342,13 +342,13 @@ public:
 					program_counter += 2;
 					break;
 				case 0x0055: // FX55 - Store V0 to Vx in memory starting at address register
-					for (auto i = 0; i < registr; ++i)
+					for (auto i = 0; i <= registr; ++i)
 						memory[registers.address + i] = registers.data[i];
 
 					program_counter += 2;
 					break;
 				case 0x0065: // FX65 - Fill V0 to Vx with values starting at address register
-					for (auto i = 0; i < registr; ++i)
+					for (auto i = 0; i <= registr; ++i)
 						registers.data[i] = memory[registers.address + i];
 
 					program_counter += 2;

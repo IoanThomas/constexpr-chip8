@@ -274,3 +274,23 @@ TEST_CASE("FX33 stores the binary-coded decimal representation of Vx in the addr
 	REQUIRE(TEST(emu.memory[521] == 3));
 	REQUIRE(TEST(emu.memory[522] == 5));
 }
+
+TEST_CASE("FX55 stores V0 to Vx in memory starting at the address register", "[opcode]")
+{
+	constexpr auto emu = run(0xA2, 0xFF, 0x60, 0xFF, 0x6A, 0xF0, 0xFA, 0x55);
+
+	REQUIRE(TEST(emu.memory[767] == 255));
+	REQUIRE(TEST(emu.memory[777] == 240));
+}
+
+TEST_CASE("FX65 fills V0 to Vx with memory starting at the address register", "[opcode]")
+{
+	constexpr auto emu = run(0xA2, 0x06, 0xF5, 0x65, 0x00, 0xEE, 0x01, 0x02, 0x05, 0x10, 0x20, 0xFF);
+
+	REQUIRE(TEST(emu.registers.data[0x0 == 1]));
+	REQUIRE(TEST(emu.registers.data[0x1 == 2]));
+	REQUIRE(TEST(emu.registers.data[0x2 == 5]));
+	REQUIRE(TEST(emu.registers.data[0x3 == 16]));
+	REQUIRE(TEST(emu.registers.data[0x4 == 32]));
+	REQUIRE(TEST(emu.registers.data[0x5 == 255]));
+}
