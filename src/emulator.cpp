@@ -1,6 +1,7 @@
 #include "emulator.h"
 
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <ios>
 #include <iostream>
@@ -11,6 +12,7 @@
 emulator::emulator(const std::string& rom_file_path)
 	: m_window(sf::VideoMode(1280, 640), "CHIP-8")
 {
+	//m_window.setFramerateLimit(400);
 	//m_window.setVerticalSyncEnabled(true);
 
 	m_frame_texture.create(chip8::display_width, chip8::display_height);
@@ -22,6 +24,7 @@ emulator::emulator(const std::string& rom_file_path)
 	m_frame_sprite.setScale(scale_x, scale_y);
 
 	load_rom(rom_file_path);
+	generate_tone();
 }
 
 void emulator::run()
@@ -69,6 +72,9 @@ void emulator::update()
 	{
 		if (!m_chip8.next_instruction())
 			m_running = false;
+
+		if (m_chip8.sound_timer != 0)
+			m_tone.play();
 	}
 
 	total_time += delta;
@@ -113,8 +119,28 @@ void emulator::load_rom(const std::string& rom_file_path)
 			++count;
 		});
 	}
-	catch (const std::ifstream::failure& e)
+	catch (const std::ifstream::failure&)
 	{
 		throw std::runtime_error("Failed to open \"" + rom_file_path + "\"");
 	}
+}
+
+void emulator::generate_tone()
+{
+	constexpr unsigned int samples = 4410;
+	constexpr unsigned int sample_rate = 44100;
+	constexpr unsigned int amplitude = 30000;
+	constexpr float increment = 440.0f / 44100.0f;
+
+	sf::Int16 raw[samples];
+
+	float x = 0.0f;
+	for (auto i = 0; i < samples; ++i)
+	{
+		raw[i] = static_cast<sf::Int16>(amplitude * std::sin(x * (std::atan(1.0) * 4.0) * 2.0));
+		x += increment;
+	}
+
+	m_sound_buffer.loadFromSamples(raw, samples, 1, sample_rate);
+	m_tone.setBuffer(m_sound_buffer);
 }
