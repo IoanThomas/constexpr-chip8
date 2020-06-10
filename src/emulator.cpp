@@ -12,6 +12,11 @@ emulator::emulator(const std::string& rom_file_path)
 {
 	//m_window.setVerticalSyncEnabled(true);
 
+	m_frame_texture.create(chip8::display_width, chip8::display_height);
+
+	m_frame_sprite.setTexture(m_frame_texture);
+	m_frame_sprite.setScale(20.0f, 20.0f);
+
 	load_rom(rom_file_path);
 }
 
@@ -50,28 +55,24 @@ void emulator::update()
 
 void emulator::render()
 {
-	m_window.clear();
-
-	sf::Image frame;
-	frame.create(chip8::display_width, chip8::display_height);
-
-	for (auto y = 0; y < chip8::display_height; ++y)
+	if (m_chip8.draw_flag)
 	{
-		for (auto x = 0; x < chip8::display_width; ++x)
+		m_window.clear();
+
+		sf::Image frame;
+		frame.create(chip8::display_width, chip8::display_height);
+
+		for (auto y = 0; y < chip8::display_height; ++y)
 		{
-			frame.setPixel(x, y, m_chip8.is_pixel_set(x, y) ? sf::Color::White : sf::Color::Black);
+			for (auto x = 0; x < chip8::display_width; ++x)
+			{
+				frame.setPixel(x, y, m_chip8.is_pixel_set(x, y) ? sf::Color::White : sf::Color::Transparent);
+			}
 		}
+
+		m_frame_texture.update(frame);
+		m_window.draw(m_frame_sprite);
 	}
-
-	sf::Texture frame_texture;
-	frame_texture.create(chip8::display_width, chip8::display_height);
-	frame_texture.update(frame);
-
-	sf::Sprite frame_sprite;
-	frame_sprite.setTexture(frame_texture);
-	frame_sprite.setScale(20.0f, 20.0f);
-
-	m_window.draw(frame_sprite);
 
 	m_window.display();
 }

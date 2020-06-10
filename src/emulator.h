@@ -16,6 +16,10 @@ public:
 private:
 	sf::RenderWindow m_window;
 	sf::Clock m_delta_clock;
+
+	sf::Texture m_frame_texture;
+	sf::Sprite m_frame_sprite;
+
 	chip8 m_chip8;
 	bool m_running = true;
 

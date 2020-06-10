@@ -107,6 +107,8 @@ public:
 		bool continue_running = true;
 		const uint16_t opcode_major = instruction & 0xF000;
 
+		draw_flag = false;
+
 		switch (opcode_major)
 		{
 		case 0x0000:
