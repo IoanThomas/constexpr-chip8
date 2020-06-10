@@ -24,7 +24,6 @@ target_compile_features(tests PRIVATE cxx_std_17)
 set_target_properties(tests PROPERTIES CXX_EXTENSIONS OFF)
 target_include_directories(tests PRIVATE
     include
-    extern/SFML/include
     extern/catch2/single_include)
 
 add_executable(chip8_emu
@@ -34,7 +33,6 @@ add_executable(chip8_emu
     src/main.cpp)
 target_compile_features(chip8_emu PRIVATE cxx_std_17)
 set_target_properties(chip8_emu PROPERTIES CXX_EXTENSIONS OFF)
-target_link_libraries(chip8_emu PRIVATE sfml-graphics)
+target_link_libraries(chip8_emu PRIVATE sfml-window sfml-graphics)
 target_include_directories(chip8_emu PRIVATE
-    include
-    extern/SFML/include)
+    include)
