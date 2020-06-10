@@ -14,8 +14,11 @@ emulator::emulator(const std::string& rom_file_path)
 
 	m_frame_texture.create(chip8::display_width, chip8::display_height);
 
+	const auto scale_x = static_cast<float>(m_window.getSize().x) / chip8::display_width;
+	const auto scale_y = static_cast<float>(m_window.getSize().y) / chip8::display_height;
+
 	m_frame_sprite.setTexture(m_frame_texture);
-	m_frame_sprite.setScale(20.0f, 20.0f);
+	m_frame_sprite.setScale(scale_x, scale_y);
 
 	load_rom(rom_file_path);
 }

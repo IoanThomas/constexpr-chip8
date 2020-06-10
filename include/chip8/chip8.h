@@ -403,6 +403,7 @@ public:
 
 		for (auto y = 0; y < height; ++y)
 		{
+			const auto py = (y_pos + y) % display_height;
 			const auto row = memory[registers.address + y];
 
 			for (auto x = 0; x < 8; ++x)
@@ -411,10 +412,12 @@ public:
 
 				if (bit)
 				{
-					if (is_pixel_set(x_pos + x, y_pos + y))
+					const auto px = (x_pos + x) % display_width;
+
+					if (is_pixel_set(px, py))
 						pixels_inverted = true;
 
-					invert_pixel(x_pos + x, y_pos + y);
+					invert_pixel(px, py);
 				}
 			}
 		}
