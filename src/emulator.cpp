@@ -36,7 +36,17 @@ void emulator::handle_events()
 	while (m_window.pollEvent(event))
 	{
 		if (event.type == sf::Event::Closed)
+		{
 			m_window.close();
+		}
+		else if (event.type == sf::Event::KeyPressed)
+		{
+			if ((event.key.code >= sf::Keyboard::A && event.key.code <= sf::Keyboard::F)
+				|| (event.key.code >= sf::Keyboard::Num0 && event.key.code <= sf::Keyboard::Num9))
+			{
+				m_chip8.key_press = event.key.code;
+			}
+		}
 	}
 }
 
