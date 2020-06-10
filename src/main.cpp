@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	emulator emu(argv[2]);
+	emulator emu(argv[1]);
 	emu.run();
 
 	return EXIT_SUCCESS;

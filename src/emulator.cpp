@@ -3,16 +3,77 @@
 #include <algorithm>
 #include <fstream>
 #include <ios>
+#include <iostream>
 #include <iterator>
 #include <vector>
 
 emulator::emulator(const std::string& rom_file_path)
+	: m_window(sf::VideoMode(1280, 640), "CHIP-8")
 {
+	//m_window.setVerticalSyncEnabled(true);
+
 	load_rom(rom_file_path);
 }
 
 void emulator::run()
 {
+	while (m_window.isOpen())
+	{
+		handle_events();
+		update();
+		render();
+	}
+}
+
+void emulator::handle_events()
+{
+	sf::Event event;
+	while (m_window.pollEvent(event))
+	{
+		if (event.type == sf::Event::Closed)
+			m_window.close();
+	}
+}
+
+void emulator::update()
+{
+	const auto delta = m_delta_clock.restart().asSeconds();
+
+	std::cout << "FPS: " << (1.0f / delta) << "\n";
+
+	if (m_running)
+	{
+		if (!m_chip8.next_instruction())
+			m_running = false;
+	}
+}
+
+void emulator::render()
+{
+	m_window.clear();
+
+	sf::Image frame;
+	frame.create(chip8::display_width, chip8::display_height);
+
+	for (auto y = 0; y < chip8::display_height; ++y)
+	{
+		for (auto x = 0; x < chip8::display_width; ++x)
+		{
+			frame.setPixel(x, y, m_chip8.is_pixel_set(x, y) ? sf::Color::White : sf::Color::Black);
+		}
+	}
+
+	sf::Texture frame_texture;
+	frame_texture.create(chip8::display_width, chip8::display_height);
+	frame_texture.update(frame);
+
+	sf::Sprite frame_sprite;
+	frame_sprite.setTexture(frame_texture);
+	frame_sprite.setScale(20.0f, 20.0f);
+
+	m_window.draw(frame_sprite);
+
+	m_window.display();
 }
 
 void emulator::load_rom(const std::string& rom_file_path)
