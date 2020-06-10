@@ -5,6 +5,7 @@
 #include <ios>
 #include <iostream>
 #include <iterator>
+#include <stdexcept>
 #include <vector>
 
 emulator::emulator(const std::string& rom_file_path)
@@ -55,15 +56,22 @@ void emulator::handle_events()
 
 void emulator::update()
 {
+	static float total_time = 0.0f;
 	const auto delta = m_delta_clock.restart().asSeconds();
 
-	std::cout << "FPS: " << (1.0f / delta) << "\n";
+	if (total_time >= 1.0f)
+	{
+		std::cout << "FPS: " << (1.0f / delta) << "\n";
+		total_time = 0.0f;
+	}
 
 	if (m_running)
 	{
 		if (!m_chip8.next_instruction())
 			m_running = false;
 	}
+
+	total_time += delta;
 }
 
 void emulator::render()
@@ -92,11 +100,21 @@ void emulator::render()
 
 void emulator::load_rom(const std::string& rom_file_path)
 {
-	std::ifstream file(rom_file_path, std::ios::binary);
+	std::ifstream file;
+	file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
-	uint16_t count = 0;
-	std::for_each(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>(), [this, &count](const char c) {
-		m_chip8.memory[chip8::program_memory_start + count] = static_cast<uint8_t>(c);
-		++count;
-	});
+	try
+	{
+		file.open(rom_file_path, std::ios::binary);
+
+		uint16_t count = 0;
+		std::for_each(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>(), [this, &count](const char c) {
+			m_chip8.memory[chip8::program_memory_start + count] = static_cast<uint8_t>(c);
+			++count;
+		});
+	}
+	catch (const std::ifstream::failure& e)
+	{
+		throw std::runtime_error("Failed to open \"" + rom_file_path + "\"");
+	}
 }
