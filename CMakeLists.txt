@@ -26,7 +26,11 @@ target_include_directories(tests PRIVATE
     include
     extern/catch2/single_include)
 
-add_executable(chip8_emu include/chip8/chip8.h src/emulator.cpp)
+add_executable(chip8_emu
+    include/chip8/chip8.h
+    src/emulator.cpp
+    src/emulator.h
+    src/main.cpp)
 target_compile_features(chip8_emu PRIVATE cxx_std_17)
 set_target_properties(chip8_emu PROPERTIES CXX_EXTENSIONS OFF)
 target_include_directories(chip8_emu PRIVATE include)

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <array>
 #include <cassert>
 #include <cstddef>
@@ -60,18 +62,31 @@ public:
 
 	bool draw_flag = false;
 
+	constexpr chip8() noexcept
+	{
+		load_font();
+	}
+
 	template<std::size_t size>
 	constexpr chip8(const std::array<uint8_t, size>& program) noexcept
 	{
-		assert(size <= program_memory_end - program_memory_start);
+		load_font();
+		load_program(program);
+	}
 
-		// Copy the font into reserved memory
+	constexpr void load_font() noexcept
+	{
 		for (auto i = 0; i < font.size(); ++i)
 			memory[i] = font[i];
+	}
 
-		// Copy the program into memory
+	template<std::size_t size>
+	constexpr void load_program(const std::array<uint8_t, size>& program) noexcept
+	{
+		assert(size <= program_memory_end - program_memory_start);
+
 		for (auto i = 0; i < size; ++i)
-			memory[static_cast<typename decltype(memory)::size_type>(program_memory_start) + i] = program[i];
+			memory[program_memory_start + i] = program[i];
 	}
 
 	constexpr void run() noexcept
@@ -393,7 +408,7 @@ public:
 		draw_flag = true;
 	}
 
-	constexpr bool is_pixel_set(const uint8_t x_pos, const uint8_t y_pos) const noexcept
+	[[nodiscard]] constexpr bool is_pixel_set(const uint8_t x_pos, const uint8_t y_pos) const noexcept
 	{
 		const auto byte = memory[display_memory_start + (y_pos * display_width / 8) + (x_pos / 8)];
 		return (byte >> (7 - (x_pos % 8))) & 1;
