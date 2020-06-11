@@ -4,6 +4,8 @@
 
 A compile-time CHIP-8 emulator.
 
+![My emulator running PONG2](images/pong2_screenshot.png)
+
 ## Getting Started
 
 ### Prerequisites
