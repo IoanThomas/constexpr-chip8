@@ -5,41 +5,6 @@ project(ConstexprCHIP8
     DESCRIPTION "A compile-time CHIP-8 emulator"
     LANGUAGES CXX)
 
-find_package(Git QUIET)
-
-if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
-    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --remote --recursive
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        RESULT_VARIABLE GIT_SUBMOD_RESULT)
-    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-        message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
-    endif()
-endif()
-
-set(BUILD_SHARED_LIBS FALSE)
-add_subdirectory(extern/SFML)
-
-add_executable(tests test/tests.cpp)
-target_compile_features(tests PRIVATE cxx_std_17)
-set_target_properties(tests PROPERTIES CXX_EXTENSIONS OFF)
-target_include_directories(tests PRIVATE
-    include
-    extern/SFML/include
-    extern/catch2/single_include)
-
-add_executable(chip8_emu
-    include/chip8/chip8.h
-    src/emulator.cpp
-    src/emulator.h
-    src/main.cpp)
-target_compile_features(chip8_emu PRIVATE cxx_std_17)
-set_target_properties(chip8_emu PROPERTIES CXX_EXTENSIONS OFF)
-target_link_libraries(chip8_emu PRIVATE sfml-audio sfml-graphics)
-target_include_directories(chip8_emu PRIVATE
-    include
-    extern/SFML/include)
-
-add_custom_command(TARGET chip8_emu POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${PROJECT_SOURCE_DIR}/extern/SFML/extlibs/bin/x64/openal32.dll"
-        $<TARGET_FILE_DIR:chip8_emu>)
+add_subdirectory(extern)
+add_subdirectory(test)
+add_subdirectory(src)

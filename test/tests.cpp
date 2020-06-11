@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "chip8/chip8.h"
+#include "chip8.h"
 
 template<bool test>
 bool static_test()
