@@ -1,5 +1,7 @@
 add_executable(chip8_emu
     chip8.h
+    config_file.cpp
+    config_file.h
     emulator.cpp
     emulator.h
     main.cpp)
