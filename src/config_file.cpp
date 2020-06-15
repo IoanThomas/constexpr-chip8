@@ -9,15 +9,15 @@ config_file::config_file(const std::string& file_path)
 
 void config_file::load(const std::string& file_path)
 {
-	std::ifstream file;
-	file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	std::ifstream file(file_path);
 
-	try
+	if (!file.is_open())
+		throw std::runtime_error("Failed to open \"" + file_path + "\"");
+
+	std::string line;
+	while (std::getline(file, line))
 	{
-		file.open(file_path);
-
-		std::string line;
-		while (std::getline(file, line))
+		if (line != "")
 		{
 			const auto delimiter_pos = line.find('=');
 
@@ -26,9 +26,5 @@ void config_file::load(const std::string& file_path)
 
 			m_config.insert({ key, value });
 		}
-	}
-	catch (const std::ifstream::failure&)
-	{
-		throw std::runtime_error("Failed to open \"" + file_path + "\"");
 	}
 }

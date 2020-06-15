@@ -29,6 +29,9 @@ private:
 	void handle_events();
 	void update();
 	void render();
+
+	void load_config();
 	void load_rom(const std::string& rom_file_path);
 	void generate_tone();
+	void create_sprite();
 };

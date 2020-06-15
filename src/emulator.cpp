@@ -9,22 +9,18 @@
 #include <stdexcept>
 #include <vector>
 
+#include "config_file.h"
+
 emulator::emulator(const std::string& rom_file_path)
-	: m_window(sf::VideoMode(1280, 640), "CHIP-8")
 {
 	//m_window.setFramerateLimit(400);
 	//m_window.setVerticalSyncEnabled(true);
 
-	m_frame_texture.create(chip8::display_width, chip8::display_height);
-
-	const auto scale_x = static_cast<float>(m_window.getSize().x) / chip8::display_width;
-	const auto scale_y = static_cast<float>(m_window.getSize().y) / chip8::display_height;
-
-	m_frame_sprite.setTexture(m_frame_texture);
-	m_frame_sprite.setScale(scale_x, scale_y);
-
+	load_config();
 	load_rom(rom_file_path);
+
 	generate_tone();
+	create_sprite();
 }
 
 void emulator::run()
@@ -104,6 +100,17 @@ void emulator::render()
 	m_window.display();
 }
 
+void emulator::load_config()
+{
+	config_file config("window.cfg");
+
+	const auto width = config.get_value<unsigned int>("width");
+	const auto height = config.get_value<unsigned int>("height");
+	const auto title = config.get_value<std::string>("title");
+
+	m_window.create(sf::VideoMode(width.value_or(800), height.value_or(400)), title.value_or("CHIP-8"));
+}
+
 void emulator::load_rom(const std::string& rom_file_path)
 {
 	std::ifstream file;
@@ -143,4 +150,15 @@ void emulator::generate_tone()
 
 	m_sound_buffer.loadFromSamples(raw, samples, 1, sample_rate);
 	m_tone.setBuffer(m_sound_buffer);
+}
+
+void emulator::create_sprite()
+{
+	m_frame_texture.create(chip8::display_width, chip8::display_height);
+
+	const auto scale_x = static_cast<float>(m_window.getSize().x) / chip8::display_width;
+	const auto scale_y = static_cast<float>(m_window.getSize().y) / chip8::display_height;
+
+	m_frame_sprite.setTexture(m_frame_texture);
+	m_frame_sprite.setScale(scale_x, scale_y);
 }

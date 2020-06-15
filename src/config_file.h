@@ -21,7 +21,7 @@ public:
 		{
 			return parse_value<T>(m_config.at(key));
 		}
-		catch (const std::logic_error& e)
+		catch (const std::logic_error&)
 		{
 			return std::nullopt;
 		}
@@ -33,33 +33,28 @@ private:
 	template<typename T>
 	inline T parse_value(const std::string& value) const
 	{
-		return static_cast<T>(value);
-	}
+		if constexpr (std::is_floating_point_v<T>)
+		{
+			return static_cast<T>(std::stold(value));
+		}
+		else if constexpr (std::is_integral_v<T> && std::is_signed_v<T>)
+		{
+			return static_cast<T>(std::stoll(value));
+		}
+		else if constexpr (std::is_integral_v<T> && std::is_unsigned_v<T>)
+		{
+			return static_cast<T>(std::stoull(value));
+		}
+		else if constexpr (std::is_same_v<T, bool>)
+		{
+			if ((value != "false") && (value != "true"))
+				throw std::invalid_argument("Value must be \"true\" or \"false\"");
 
-	template<typename T>
-	inline std::enable_if_t<std::is_floating_point_v<T>> parse_value(const std::string& value) const
-	{
-		return static_cast<T>(std::stold(value));
-	}
-
-	template<typename T>
-	inline std::enable_if_t<std::is_integral_v<T> && std::is_signed_v<T>> parse_value(const std::string& value) const
-	{
-		return static_cast<T>(std::stoll(value));
-	}
-
-	template<typename T>
-	inline std::enable_if_t<std::is_integral_v<T>&& std::is_unsigned_v<T>> parse_value(const std::string& value) const
-	{
-		return static_cast<T>(std::stoull(value));
-	}
-
-	template<>
-	inline bool parse_value<bool>(const std::string& value) const
-	{
-		if ((value != "false") && (value != "true"))
-			throw std::invalid_argument("Value must is not \"true\" or \"false\"");
-
-		return value == "true" ? true : false;
+			return value == "true" ? true : false;
+		}
+		else
+		{
+			return static_cast<T>(value);
+		}
 	}
 };
