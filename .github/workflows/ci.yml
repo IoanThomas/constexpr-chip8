@@ -26,3 +26,14 @@ jobs:
         run: cmake --build build --target chip8_emu
       - name: Run tests
         run: cmake --build build --target tests
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure CMake
+        run: mkdir build && cd build && cmake ..
+      - name: Build project
+        run: cmake --build build --target chip8_emu
+      - name: Run tests
+        run: cmake --build build --target tests
