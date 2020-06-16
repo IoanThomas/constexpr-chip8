@@ -15,3 +15,8 @@ add_custom_command(TARGET chip8_emu POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${PROJECT_SOURCE_DIR}/extern/SFML/extlibs/bin/x64/openal32.dll"
         $<TARGET_FILE_DIR:chip8_emu>)
+        
+add_custom_command(TARGET chip8_emu POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${PROJECT_SOURCE_DIR}/data/window.cfg"
+        $<TARGET_FILE_DIR:chip8_emu>)
