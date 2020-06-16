@@ -33,7 +33,14 @@ private:
 	template<typename T>
 	inline T parse_value(const std::string& value) const
 	{
-		if constexpr (std::is_floating_point_v<T>)
+		if constexpr (std::is_same_v<T, bool>)
+		{
+			if ((value != "false") && (value != "true"))
+				throw std::invalid_argument("Value must be \"true\" or \"false\"");
+
+			return value == "true" ? true : false;
+		}
+		else if constexpr (std::is_floating_point_v<T>)
 		{
 			return static_cast<T>(std::stold(value));
 		}
@@ -44,13 +51,6 @@ private:
 		else if constexpr (std::is_integral_v<T> && std::is_unsigned_v<T>)
 		{
 			return static_cast<T>(std::stoull(value));
-		}
-		else if constexpr (std::is_same_v<T, bool>)
-		{
-			if ((value != "false") && (value != "true"))
-				throw std::invalid_argument("Value must be \"true\" or \"false\"");
-
-			return value == "true" ? true : false;
 		}
 		else
 		{

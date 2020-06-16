@@ -13,9 +13,6 @@
 
 emulator::emulator(const std::string& rom_file_path)
 {
-	//m_window.setFramerateLimit(400);
-	//m_window.setVerticalSyncEnabled(true);
-
 	load_config();
 	load_rom(rom_file_path);
 
@@ -89,7 +86,7 @@ void emulator::render()
 		{
 			for (auto x = 0; x < chip8::display_width; ++x)
 			{
-				frame.setPixel(x, y, m_chip8.is_pixel_set(x, y) ? sf::Color::White : sf::Color::Transparent);
+				frame.setPixel(x, y, m_chip8.is_pixel_set(x, y) ? m_foreground_colour : m_background_colour);
 			}
 		}
 
@@ -104,11 +101,28 @@ void emulator::load_config()
 {
 	config_file config("window.cfg");
 
+	const auto fg_r = config.get_value<uint8_t>("foreground_r");
+	const auto fg_g = config.get_value<uint8_t>("foreground_g");
+	const auto fg_b = config.get_value<uint8_t>("foreground_b");
+	const auto fg_a = config.get_value<uint8_t>("foreground_a");
+
+	const auto bg_r = config.get_value<uint8_t>("background_r");
+	const auto bg_g = config.get_value<uint8_t>("background_g");
+	const auto bg_b = config.get_value<uint8_t>("background_b");
+	const auto bg_a = config.get_value<uint8_t>("background_a");
+
+	m_foreground_colour = sf::Color(fg_r.value_or(255), fg_g.value_or(255), fg_b.value_or(255), fg_a.value_or(255));
+	m_background_colour = sf::Color(bg_r.value_or(0), bg_g.value_or(0), bg_b.value_or(0), bg_a.value_or(255));
+
 	const auto width = config.get_value<unsigned int>("width");
 	const auto height = config.get_value<unsigned int>("height");
 	const auto title = config.get_value<std::string>("title");
+	const auto max_fps = config.get_value<unsigned int>("max_fps");
+	const auto vsync = config.get_value<bool>("vsync");
 
 	m_window.create(sf::VideoMode(width.value_or(800), height.value_or(400)), title.value_or("CHIP-8"));
+	m_window.setFramerateLimit(max_fps.value_or(500));
+	m_window.setVerticalSyncEnabled(vsync.value_or(false));
 }
 
 void emulator::load_rom(const std::string& rom_file_path)

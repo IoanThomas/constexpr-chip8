@@ -24,6 +24,8 @@ private:
 
 	chip8 m_chip8;
 	sf::Sound m_tone;
+	sf::Color m_foreground_colour;
+	sf::Color m_background_colour;
 	bool m_running = true;
 
 	void handle_events();
