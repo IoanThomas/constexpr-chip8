@@ -14,6 +14,7 @@
 emulator::emulator(const std::string& rom_file_path)
 {
 	load_config();
+	load_keybinds();
 	load_rom(rom_file_path);
 
 	generate_tone();
@@ -41,10 +42,10 @@ void emulator::handle_events()
 		}
 		else if (event.type == sf::Event::KeyPressed)
 		{
-			if ((event.key.code >= sf::Keyboard::A && event.key.code <= sf::Keyboard::F)
-				|| (event.key.code >= sf::Keyboard::Num0 && event.key.code <= sf::Keyboard::Num9))
+			for (auto i = 0; i < m_chip8.keybinds.size(); ++i)
 			{
-				m_chip8.key_press = event.key.code;
+				if (m_chip8.keybinds[i] == event.key.code)
+					m_chip8.key_press = i;
 			}
 		}
 	}
@@ -123,6 +124,45 @@ void emulator::load_config()
 	m_window.create(sf::VideoMode(width.value_or(800), height.value_or(400)), title.value_or("CHIP-8"));
 	m_window.setFramerateLimit(max_fps.value_or(500));
 	m_window.setVerticalSyncEnabled(vsync.value_or(false));
+}
+
+void emulator::load_keybinds()
+{
+	config_file keybinds("keybinds.cfg");
+
+	const auto key_0 = keybinds.get_value<uint8_t>("0");
+	const auto key_1 = keybinds.get_value<uint8_t>("1");
+	const auto key_2 = keybinds.get_value<uint8_t>("2");
+	const auto key_3 = keybinds.get_value<uint8_t>("3");
+	const auto key_4 = keybinds.get_value<uint8_t>("4");
+	const auto key_5 = keybinds.get_value<uint8_t>("5");
+	const auto key_6 = keybinds.get_value<uint8_t>("6");
+	const auto key_7 = keybinds.get_value<uint8_t>("7");
+	const auto key_8 = keybinds.get_value<uint8_t>("8");
+	const auto key_9 = keybinds.get_value<uint8_t>("9");
+	const auto key_a = keybinds.get_value<uint8_t>("a");
+	const auto key_b = keybinds.get_value<uint8_t>("b");
+	const auto key_c = keybinds.get_value<uint8_t>("c");
+	const auto key_d = keybinds.get_value<uint8_t>("d");
+	const auto key_e = keybinds.get_value<uint8_t>("e");
+	const auto key_f = keybinds.get_value<uint8_t>("f");
+
+	m_chip8.keybinds.at(0) = key_0.value_or(sf::Keyboard::Num0);
+	m_chip8.keybinds.at(1) = key_1.value_or(sf::Keyboard::Num1);
+	m_chip8.keybinds.at(2) = key_2.value_or(sf::Keyboard::Num2);
+	m_chip8.keybinds.at(3) = key_3.value_or(sf::Keyboard::Num3);
+	m_chip8.keybinds.at(4) = key_4.value_or(sf::Keyboard::Num4);
+	m_chip8.keybinds.at(5) = key_5.value_or(sf::Keyboard::Num5);
+	m_chip8.keybinds.at(6) = key_6.value_or(sf::Keyboard::Num6);
+	m_chip8.keybinds.at(7) = key_7.value_or(sf::Keyboard::Num7);
+	m_chip8.keybinds.at(8) = key_8.value_or(sf::Keyboard::Num8);
+	m_chip8.keybinds.at(9) = key_9.value_or(sf::Keyboard::Num9);
+	m_chip8.keybinds.at(10) = key_a.value_or(sf::Keyboard::A);
+	m_chip8.keybinds.at(11) = key_b.value_or(sf::Keyboard::B);
+	m_chip8.keybinds.at(12) = key_c.value_or(sf::Keyboard::C);
+	m_chip8.keybinds.at(13) = key_d.value_or(sf::Keyboard::D);
+	m_chip8.keybinds.at(14) = key_e.value_or(sf::Keyboard::E);
+	m_chip8.keybinds.at(15) = key_f.value_or(sf::Keyboard::F);
 }
 
 void emulator::load_rom(const std::string& rom_file_path)

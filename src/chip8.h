@@ -62,6 +62,7 @@ public:
 	uint8_t delay_timer = 60;
 	uint8_t sound_timer = 60;
 
+	std::array<uint8_t, 16> keybinds{};
 	bool draw_flag = false;
 	int key_press = 0;
 
@@ -307,21 +308,18 @@ public:
 		case 0xE000:
 			{
 				const uint8_t registr = (instruction & 0x0F00) >> 8;
-
-				int key_code = registers.data[registr] - 10;
-				if (registers.data[registr] < 0xA)
-					key_code = sf::Keyboard::Num0 + registers.data[registr];
+				const auto key_code = registers.data[registr];
 
 				switch (instruction & 0x00FF)
 				{
 				case 0x009E: // EX9E - Skip next instruction if key stored in Vx is pressed
-					if (sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(key_code)))
+					if (sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(keybinds.at(key_code))))
 						program_counter += 2;
 
 					program_counter += 2;
 					break;
 				case 0x00A1: // EXA1 - Skip next instruction if key stored in Vx is not pressed
-					if (!sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(key_code)))
+					if (!sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(keybinds.at(key_code))))
 						program_counter += 2;
 
 					program_counter += 2;

@@ -33,6 +33,7 @@ private:
 	void render();
 
 	void load_config();
+	void load_keybinds();
 	void load_rom(const std::string& rom_file_path);
 	void generate_tone();
 	void create_sprite();
