@@ -12,7 +12,7 @@ jobs:
     - name: Configure CMake
       run: mkdir build && cd build && cmake ..
     - name: Build project
-      run: cmake --build build --target chip8_emu
+      run: cmake --build build --target chip8-emu
     - name: Run tests
       run: cmake --build build --target tests
 
@@ -23,7 +23,7 @@ jobs:
       - name: Configure CMake
         run: mkdir build && cd build && cmake ..
       - name: Build project
-        run: cmake --build build --target chip8_emu
+        run: cmake --build build --target chip8-emu
       - name: Run tests
         run: cmake --build build --target tests
 
@@ -34,6 +34,6 @@ jobs:
       - name: Configure CMake
         run: mkdir build && cd build && cmake ..
       - name: Build project
-        run: cmake --build build --target chip8_emu
+        run: cmake --build build --target chip8-emu
       - name: Run tests
         run: cmake --build build --target tests
